@@ -1,0 +1,34 @@
+custom:
+  pythonRequirements:
+    requirePoetryLockFile: true
+
+  localstack:
+    stages:
+      - dev
+    # Access exposed host/port on docker-compose
+    host: http://localhost
+    edgePort: 4566
+    autostart: false
+    lambda:
+      # Use deployed artifacts
+      mountCode: false
+
+service: aws-python # NOTE: update this with your service name
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.9
+
+functions:
+  hello:
+    handler: main.hello
+    events:
+      - http:
+          path: /hello
+          method: get
+
+plugins:
+  - serverless-python-requirements
+  - serverless-localstack
